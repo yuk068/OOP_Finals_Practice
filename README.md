@@ -3,7 +3,7 @@
 ## Algorithms:
 
 1. Sorting program using strategy pattern with Bubble sort, Insertion sort, Selection sort, Quick sort and Merge sort
-2. Base converter using observer pattern (with and without BigInteger)
+2. Base converter using observer pattern (with and without BigInteger) (Note: not a good example for observer pattern, observer pattern shouldn't mutate any Objects)
 
 ## Calculus:
 
