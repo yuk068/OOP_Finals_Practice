@@ -63,6 +63,25 @@ public class MyMath {
         return ln(x) / ln(a);
     }
 
+    public static double sqrt(double x) {
+        if (x < 0) {
+            throw new IllegalArgumentException("Input must be greater than or equal to 0");
+        }
+        if (x == 0) {
+            return 0;
+        }
+
+        double guess = x / 2;
+        double prevGuess;
+
+        do {
+            prevGuess = guess;
+            guess = 0.5 * (guess + x / guess);
+        } while (Math.abs(guess - prevGuess) >= 1e-10);
+
+        return guess;
+    }
+
     public static double factorial(int n) {
         double result = 1.0;
         for (int i = 2; i <= n; i++) {
