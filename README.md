@@ -41,7 +41,7 @@
 
 2. Vector:
    - Basic arithmetic operations on vectors
-   - Magnitude, distance, dot product, scaling
+   - Magnitude, distance, dot product, scaling, etc...
 
 ## Statistics:
 
