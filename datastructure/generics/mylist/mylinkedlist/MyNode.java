@@ -1,32 +1,32 @@
 package yukwork.datastructure.generics.mylist.mylinkedlist;
 
-public class MyNode {
+public class MyNode<T> {
 
-    private Object payload;
-    private MyNode next;
+    private T payload;
+    private MyNode<T> next;
 
-    public MyNode(Object payload) {
+    public MyNode(T payload) {
         this.payload = payload;
     }
 
-    public MyNode(Object payload, MyNode next) {
+    public MyNode(T payload, MyNode<T> next) {
         this.payload = payload;
         this.next = next;
     }
 
-    public Object getPayload() {
+    public T getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(T payload) {
         this.payload = payload;
     }
 
-    public MyNode getNext() {
+    public MyNode<T> getNext() {
         return next;
     }
 
-    public void setNext(MyNode next) {
+    public void setNext(MyNode<T> next) {
         this.next = next;
     }
 

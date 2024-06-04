@@ -1,11 +1,11 @@
 package yukwork.datastructure.generics.mymap.myhashmap;
 
-public class MyHashMapEntry {
+public class MyHashMapEntry<E, V> {
 
-    private final Object key;
-    private Object value;
+    private final E key;
+    private V value;
 
-    public MyHashMapEntry(Object key, Object value) {
+    public MyHashMapEntry(E key, V value) {
         this.key = key;
         this.value = value;
     }
@@ -18,7 +18,7 @@ public class MyHashMapEntry {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(V value) {
         this.value = value;
     }
 

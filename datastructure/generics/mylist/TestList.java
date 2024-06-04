@@ -14,11 +14,11 @@ public class TestList {
 
     public static void main(String[] args) {
         System.out.println("Test MyArrayList:");
-        testList(new MyArrayList<String>());
+        testList(new MyArrayList<>());
         System.out.println("Test MyLinkedList:");
-        testList(new MyLinkedList<String>());
+        testList(new MyLinkedList<>());
         System.out.println("Test MyDoublyLinkedList:");
-        testList(new MyDoublyLinkedList<String>());
+        testList(new MyDoublyLinkedList<>());
         testStack();
         testQueue();
         testDeque();

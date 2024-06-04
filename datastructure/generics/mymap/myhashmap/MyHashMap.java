@@ -11,7 +11,7 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
 
     private static final int DEFAULT_CAPACITY = 4;
     private static final float LOAD_FACTOR = 0.75f;
-    private MyHashMapEntry[] table;
+    private MyHashMapEntry<E, V>[] table;
     private int size;
 
     public MyHashMap() {
@@ -24,35 +24,33 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
         ensureCapacity();
         int bucket = getBucketIndex(key);
         if (table[bucket] == null) {
-            table[bucket] = new MyHashMapEntry(key, value);
+            table[bucket] = new MyHashMapEntry<>(key, value);
             size++;
-        } else {
+        } else if (table[bucket].getKey().equals(key)) {
             table[bucket].setValue(value);
+        } else {
+            bucket = findNextAvailableBucket(bucket, key);
+            table[bucket] = new MyHashMapEntry<>(key, value);
+            size++;
         }
     }
 
     @Override
     public Object get(E key) {
         int bucket = getBucketIndex(key);
-        if (table[bucket] != null) {
+        if (table[bucket] != null && table[bucket].getKey().equals(key)) {
             return table[bucket].getValue();
         } else throw new NoSuchElementException("Invalid key!");
     }
 
     @Override
     public void removeByKey(E key) {
-        int originalBucket = getBucketIndex(key);
-        int bucket = originalBucket;
-
-        do {
-            if (table[bucket] != null && table[bucket].getKey().equals(key)) {
-                table[bucket] = null;
-                size--;
-                rehashFrom(bucket);
-                return;
-            }
-            bucket = (bucket + 1) % table.length;
-        } while (bucket != originalBucket);
+        int bucket = getBucketIndex(key);
+        if (table[bucket] != null && table[bucket].getKey().equals(key)) {
+            table[bucket] = null;
+            size--;
+            rehashFrom(bucket);
+        }
     }
 
     @Override
@@ -69,27 +67,23 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
 
     @Override
     public void setValueAt(E key, V value) {
-        for (MyHashMapEntry entry : table) {
-            if (entry != null && entry.getKey().equals(key)) {
-                entry.setValue(value);
-                return;
-            }
+        int bucket = getBucketIndex(key);
+        if (table[bucket] != null && table[bucket].getKey().equals(key)) {
+            table[bucket].setValue(value);
+        } else {
+            throw new NoSuchElementException("Invalid key!");
         }
     }
 
     @Override
     public boolean containsKey(E key) {
-        for (MyHashMapEntry entry : table) {
-            if (entry != null && entry.getKey().equals(key)) {
-                return true;
-            }
-        }
-        return false;
+        int bucket = getBucketIndex(key);
+        return table[bucket] != null && table[bucket].getKey().equals(key);
     }
 
     @Override
     public boolean containsValue(V value) {
-        for (MyHashMapEntry entry : table) {
+        for (MyHashMapEntry<E, V> entry : table) {
             if (entry != null && entry.getValue().equals(value)) {
                 return true;
             }
@@ -117,10 +111,10 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
     @SuppressWarnings("unchecked")
     private void ensureCapacity() {
         if (capacityRatio() > LOAD_FACTOR) {
-            MyHashMapEntry[] oldTable = table;
+            MyHashMapEntry<E, V>[] oldTable = table;
             table = new MyHashMapEntry[oldTable.length * 2];
             size = 0;
-            for (MyHashMapEntry entry : oldTable) {
+            for (MyHashMapEntry<E, V> entry : oldTable) {
                 if (entry != null) {
                     put((E) entry.getKey(), (V) entry.getValue());
                 }
@@ -132,7 +126,7 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
     private void rehashFrom(int startIndex) {
         int index = (startIndex + 1) % table.length;
         while (table[index] != null) {
-            MyHashMapEntry entry = table[index];
+            MyHashMapEntry<E, V> entry = table[index];
             table[index] = null;
             size--;
             put((E) entry.getKey(), (V) entry.getValue());
@@ -144,7 +138,7 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         int entries = 0;
-        for (MyHashMapEntry myHashMapEntry : table) {
+        for (MyHashMapEntry<E, V> myHashMapEntry : table) {
             if (myHashMapEntry != null) {
                 if (entries != size - 1) {
                     sb.append("[").append(myHashMapEntry.getKey()).append(", ").append(myHashMapEntry.getValue()).append("]").append(", ");
@@ -166,4 +160,11 @@ public class MyHashMap<E, V> implements MyMap<E, V> {
         return sb.toString();
     }
 
+    private int findNextAvailableBucket(int startBucket, E key) {
+        int bucket = (startBucket + 1) % table.length;
+        while (table[bucket] != null && !table[bucket].getKey().equals(key)) {
+            bucket = (bucket + 1) % table.length;
+        }
+        return bucket;
+    }
 }

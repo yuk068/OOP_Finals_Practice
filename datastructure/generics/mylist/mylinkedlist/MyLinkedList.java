@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MyLinkedList<T> extends MyAbstractList<T> {
 
-    private MyNode head;
+    private MyNode<T> head;
     private int size;
 
     public MyLinkedList() {
@@ -23,9 +23,9 @@ public class MyLinkedList<T> extends MyAbstractList<T> {
     @Override
     public void append(T payload) {
         if (size == 0) {
-            head = new MyNode(payload);
+            head = new MyNode<>(payload);
         } else {
-            getNodeByIndex(size - 1).setNext(new MyNode(payload));
+            getNodeByIndex(size - 1).setNext(new MyNode<>(payload));
         }
         size++;
     }
@@ -34,10 +34,10 @@ public class MyLinkedList<T> extends MyAbstractList<T> {
     public void insert(T payload, int index) {
         checkBound(index, size + 1);
         if (index == 0) {
-            head = new MyNode(payload, head);
+            head = new MyNode<>(payload, head);
         } else {
-            MyNode prevNode = getNodeByIndex(index - 1);
-            prevNode.setNext(new MyNode(payload, prevNode.getNext()));
+            MyNode<T> prevNode = getNodeByIndex(index - 1);
+            prevNode.setNext(new MyNode<>(payload, prevNode.getNext()));
         }
         size++;
     }
@@ -69,17 +69,16 @@ public class MyLinkedList<T> extends MyAbstractList<T> {
         if (index == 0) {
             head = head.getNext();
         } else {
-            MyNode prevNode = getNodeByIndex(index - 1);
+            MyNode<T> prevNode = getNodeByIndex(index - 1);
             prevNode.setNext(prevNode.getNext().getNext());
         }
         size--;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkBound(index, size);
-        return (T) getNodeByIndex(index).getPayload();
+        return getNodeByIndex(index).getPayload();
     }
 
     @Override
@@ -107,8 +106,8 @@ public class MyLinkedList<T> extends MyAbstractList<T> {
         return toList;
     }
 
-    private MyNode getNodeByIndex(int index) {
-        MyNode target = head;
+    private MyNode<T> getNodeByIndex(int index) {
+        MyNode<T> target = head;
         for (int i = 0; i < index; i++) {
             target = target.getNext();
         }
