@@ -106,6 +106,46 @@ public class ListVector implements IVector {
         return result;
     }
 
+    public ListVector cross(ListVector another) {
+        if (data.size() != 3 || another.data.size() != 3) throw new IllegalArgumentException("Cross product is only defined for 3D vectors");
+        double x = data.get(1) * another.data.get(2) - data.get(2) * another.data.get(1);
+        double y = data.get(2) * another.data.get(0) - data.get(0) * another.data.get(2);
+        double z = data.get(0) * another.data.get(1) - data.get(1) * another.data.get(0);
+        return new ListVector(Arrays.asList(x, y, z));
+    }
+
+    public double angleTo(ListVector another) {
+        double dotProduct = this.dot(another);
+        double magnitudes = this.magnitude() * another.magnitude();
+        return Math.acos(dotProduct / magnitudes);
+    }
+
+    public ListVector projectOnto(ListVector another) {
+        double scalarProjection = this.dot(another) / another.dot(another);
+        return another.scale(scalarProjection);
+    }
+
+    public ListVector normalize() {
+        double mag = this.magnitude();
+        if (mag == 0) throw new ArithmeticException("Cannot normalize a zero vector");
+        return this.scale(1 / mag);
+    }
+
+    public ListVector reflect(ListVector normal) {
+        ListVector normalizedNormal = normal.normalize();
+        double dotProduct = this.dot(normalizedNormal);
+        return this.minus(normalizedNormal.scale(2 * dotProduct));
+    }
+
+    public ListVector rotate(double angle) {
+        if (data.size() != 2) throw new UnsupportedOperationException("Rotation is only supported for 2D vectors");
+        double cosTheta = Math.cos(angle);
+        double sinTheta = Math.sin(angle);
+        double x = data.get(0) * cosTheta - data.get(1) * sinTheta;
+        double y = data.get(0) * sinTheta + data.get(1) * cosTheta;
+        return new ListVector(Arrays.asList(x, y));
+    }
+
     private void checkBound(int index, int limit) {
         if (index < 0 || index >= limit) throw new IndexOutOfBoundsException("Invalid index.");
     }

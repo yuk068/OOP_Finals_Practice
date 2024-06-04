@@ -116,6 +116,46 @@ public class ArrayVector implements IVector {
         return result;
     }
 
+    public ArrayVector cross(ArrayVector another) {
+        if (length != 3 || another.length != 3) throw new IllegalArgumentException("Cross product is only defined for 3D vectors");
+        double x = data[1] * another.data[2] - data[2] * another.data[1];
+        double y = data[2] * another.data[0] - data[0] * another.data[2];
+        double z = data[0] * another.data[1] - data[1] * another.data[0];
+        return new ArrayVector(new double[]{x, y, z});
+    }
+
+    public double angleTo(ArrayVector another) {
+        double dotProduct = this.dot(another);
+        double magnitudes = this.magnitude() * another.magnitude();
+        return Math.acos(dotProduct / magnitudes);
+    }
+
+    public ArrayVector projectOnto(ArrayVector another) {
+        double scalarProjection = this.dot(another) / another.dot(another);
+        return another.scale(scalarProjection);
+    }
+
+    public ArrayVector normalize() {
+        double mag = this.magnitude();
+        if (mag == 0) throw new ArithmeticException("Cannot normalize a zero vector");
+        return this.scale(1 / mag);
+    }
+
+    public ArrayVector reflect(ArrayVector normal) {
+        ArrayVector normalizedNormal = normal.normalize();
+        double dotProduct = this.dot(normalizedNormal);
+        return this.minus(normalizedNormal.scale(2 * dotProduct));
+    }
+
+    public ArrayVector rotate(double angle) {
+        if (length != 2) throw new UnsupportedOperationException("Rotation is only supported for 2D vectors");
+        double cosTheta = Math.cos(angle);
+        double sinTheta = Math.sin(angle);
+        double x = data[0] * cosTheta - data[1] * sinTheta;
+        double y = data[0] * sinTheta + data[1] * cosTheta;
+        return new ArrayVector(new double[]{x, y});
+    }
+
     private void extend() {
         double[] newData = new double[data.length * 2];
         System.arraycopy(data, 0, newData, 0, length);

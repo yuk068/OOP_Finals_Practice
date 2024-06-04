@@ -216,7 +216,7 @@ public class Matrix {
 
     public Matrix multiply(Matrix another) {
         if (rows != another.cols)
-            throw new IllegalArgumentException("Number of columns of first first.matrix should be equal to number of rows in second first.matrix");
+            throw new IllegalArgumentException("Number of columns of first matrix should be equal to number of rows in second matrix");
         Matrix result = new Matrix(rows, another.cols);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < another.cols; j++) {

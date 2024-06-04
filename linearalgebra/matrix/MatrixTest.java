@@ -42,6 +42,7 @@ public class MatrixTest {
         matrix.set(2, 0, 7);
         matrix.set(2, 1, 8);
         matrix.set(2, 2, 9);
+        System.out.println(matrix);
         double determinant = matrix.determinant();
         System.out.println("Determinant of the matrix: " + determinant);
     }
